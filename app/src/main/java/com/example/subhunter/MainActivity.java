@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("Debugging", "in newGame");
     }
-
     /*
            Here we will do all the drawing.
            The grid lines, the HUD and
