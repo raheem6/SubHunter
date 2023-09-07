@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+
     // These variables can be "seen"
     // throughout the SubHunter class
     int numberHorizontalPixels;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     boolean hit = false;
     int shotsTaken;
     int distanceFromSub;
-    boolean debugging = true;
+    boolean debugging = false;
 
     // Here are all the objects(instances)
     // of classes that we need to do some drawing
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         numberVerticalPixels = size.y;
         blockSize = numberHorizontalPixels / gridWidth;
         gridHeight = numberVerticalPixels / blockSize;
+
         // Initialize all the objects ready for drawing
         blankBitmap = Bitmap.createBitmap(numberHorizontalPixels,
                 numberVerticalPixels,
@@ -84,14 +86,16 @@ public class MainActivity extends AppCompatActivity {
            happen when the app is first started
            and after the player wins a game.
     */
-    public void newGame(){
+    void newGame(){
         Random random = new Random();
         subHorizontalPosition = random.nextInt(gridWidth);
         subVerticalPosition = random.nextInt(gridHeight);
         shotsTaken = 0;
 
         Log.d("Debugging", "in newGame");
+
     }
+
     /*
            Here we will do all the drawing.
            The grid lines, the HUD and
@@ -112,12 +116,14 @@ public class MainActivity extends AppCompatActivity {
                     blockSize * i, numberVerticalPixels,
                     paint);
         }
+
         // Draw the horizontal lines of the grid
         for(int i = 0; i < gridHeight; i++){
             canvas.drawLine(0, blockSize * i,
                     numberHorizontalPixels, blockSize * i,
                     paint);
         }
+
         // Draw the player's shot
         canvas.drawRect(horizontalTouched * blockSize,
                 verticalTouched * blockSize,
@@ -135,9 +141,10 @@ public class MainActivity extends AppCompatActivity {
                 blockSize, blockSize * 1.75f,
                 paint);
 
-
         Log.d("Debugging", "In draw");
-        printDebuggingText();
+        if (debugging) {
+            printDebuggingText();
+        }
     }
 
     /*
@@ -152,10 +159,12 @@ public class MainActivity extends AppCompatActivity {
         if((motionEvent.getAction() &
                 MotionEvent.ACTION_MASK)
                 == MotionEvent.ACTION_UP) {
+
             // Process the player's shot by passing the
             // coordinates of the player's finger to takeShot
             takeShot(motionEvent.getX(), motionEvent.getY());
         }
+
         return true;
     }
 
@@ -201,19 +210,25 @@ public class MainActivity extends AppCompatActivity {
     }
     // This code says "BOOM!"
     void boom(){
+
         gameView.setImageBitmap(blankBitmap);
+
         // Wipe the screen with a red color
         canvas.drawColor(Color.argb(255, 255, 0, 0));
+
         // Draw some huge white text
         paint.setColor(Color.argb(255, 255, 255, 255));
         paint.setTextSize(blockSize * 10);
+
         canvas.drawText("BOOM!", blockSize * 4,
                 blockSize * 14, paint);
+
         // Draw some text to prompt restarting
         paint.setTextSize(blockSize * 2);
         canvas.drawText("Take a shot to start again",
                 blockSize * 8,
                 blockSize * 18, paint);
+
         // Start a new game
         newGame();
     }
@@ -252,6 +267,5 @@ public class MainActivity extends AppCompatActivity {
                 50, blockSize * 13, paint);
         canvas.drawText("debugging = " + debugging,
                 50, blockSize * 14, paint);
-
     }
 }
